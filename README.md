@@ -6,7 +6,7 @@ We want to address all issues in a timely manner and will inform the responsible
 Before creating an issue, please do the following:
 
 - Check the [Developer Documentation](https://developer.riotgames.com/) to make sure the behavior you are reporting is really a bug, not a feature.
-- Check the existing issues to make sure you are not duplicating somebody&#39;s work.
+- Check the [existing issues](https://github.com/RiotGames/developer-relations/issues) to make sure you are not duplicating somebody&#39;s work.
 - Verify, that the issue you are about to report relates to the Riot Games Developer Ecosystem and is not a game bug.
 
 If you are sure that the problem you are experiencing is caused by a bug, file a new issue in a Github issue tracker following the recommendations below.
