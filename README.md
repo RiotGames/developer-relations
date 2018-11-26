@@ -1,7 +1,19 @@
 #
+# Riot Games Developer Relations Repo
+
+Welcome to the Riot Games Developer Relations Repo. The current focus of this repo is exclusively for bug reporting for tools in the Riot Games Developer Ecosystem.
+
+If you are looking for anything else you may find it at these links:
+
+- Riot Games Developer Portal: [https://developer.riotgames.com/](https://developer.riotgames.com/)
+- Riot Games DevRel Twitter: [https://twitter.com/riotgamesapi](https://twitter.com/riotgamesapi?lang=en)
+- Riot Games DevRel Discord: [https://discord.gg/riotapi](https://discord.gg/riotapi)
+- Riot Games DevRel Homepage: [https://www.riotgames.com/DevRel](https://www.riotgames.com/DevRel)
+
+#
 # Issue reporting guidelines
 
-We want to address all issues in a timely manner and will inform the responsible teams of issues their products/services have. However we cannot guarantee that issues will be resolved.
+The Riot Games Developer Relations team wants to address all issues in a timely manner and will inform the responsible teams of issues their products/services have. However we cannot guarantee that issues will be resolved.
 
 Before creating an issue, please do the following:
 
@@ -32,11 +44,9 @@ Please note, that higher level of detail in the report increases chance that som
 
         Expected Result
 
-
 1. [Screenshots, logs or description]
 
         Actual Result
-        
 
 1. [Screenshots, logs or description]
 
@@ -44,13 +54,13 @@ Please note, that higher level of detail in the report increases chance that som
 
 Title is a vital part of bug report for developer and triager to quickly identify a unique issue. A well written title should contain a clear, brief explanation of the issue, making emphasis on the most important points.
 
-**Good example would be:**
+Good example would be:
 
-*Attack speed in Data Dragon is missing as of the last update*
+Attack speed in Data Dragon is missing as of the last update
 
-**Unclear example:**
+Unclear example:
 
-*DDragon Wrong*
+DDragon Wrong
 
 **Issue Description**
 
