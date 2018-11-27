@@ -56,9 +56,9 @@ Note that higher levels of detail in the report increases the chance that someon
 
 The title is a vital part of a bug report that allows the developer and triager to quickly identify a unique issue. A well-written title should contain a clear, brief explanation of the issue, emphasizing the most important points.
 
-Clear example: Attack speed in Data Dragon is missing as of the last update
+        Clear example: Attack speed in Data Dragon is missing as of the last update
 
-Unclear example: DDragon Wrong
+        Unclear example: DDragon Wrong
 
 ***Description***
 
