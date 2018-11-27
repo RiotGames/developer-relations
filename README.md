@@ -36,11 +36,13 @@ Please note, that higher level of detail in the report increases chance that som
 1.
 2.
 
+
         Steps to Reproduce
 
 1.
 2.
 3.
+
 
         Expected Result
 
@@ -48,20 +50,18 @@ Please note, that higher level of detail in the report increases chance that som
 
         Actual Result
 
+
 1. [Screenshots, logs or description]
 
 **Title**
 
 Title is a vital part of bug report for developer and triager to quickly identify a unique issue. A well written title should contain a clear, brief explanation of the issue, making emphasis on the most important points.
 
-        Good example would be:
+        Good example would be: Attack speed in Data Dragon is missing as of the last update
 
-*Attack speed in Data Dragon is missing as of the last update*
-
-        Unclear example:
-
-*DDragon Wrong*
-
+        Unclear example: DDragon Wrong
+        
+        
 **Issue Description**
 
 **Preconditions**
