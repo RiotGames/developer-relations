@@ -52,7 +52,7 @@ Note that higher levels of detail in the report increases the chance that someon
 
 1. [Screenshots, logs or description]
 
-***Title***
+# Title
 
 The title is a vital part of a bug report that allows the developer and triager to quickly identify a unique issue. A well-written title should contain a clear, brief explanation of the issue, emphasizing the most important points.
 
@@ -60,7 +60,7 @@ The title is a vital part of a bug report that allows the developer and triager 
 
         Unclear example: DDragon Wrong
 
-***Description***
+# Description
 
 **Preconditions**
 
