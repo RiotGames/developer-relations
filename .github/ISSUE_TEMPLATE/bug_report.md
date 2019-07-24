@@ -7,16 +7,16 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+**Describe the bug**  
 A clear and concise description of what the bug is.
 
-**Issue Description**
+**Issue Description**  
 A clear and concise description of what the bug is.
 
-**Expected Result**
+**Expected Result**  
 What were you expecting to happen after you performed the above steps? Include screenshots, logs, or a description.
 
-**Actual Result**
+**Actual Result**  
 What actually happened after you performed the above steps? Include screenshots, logs, or a description.
 
 **Developer Impact**
