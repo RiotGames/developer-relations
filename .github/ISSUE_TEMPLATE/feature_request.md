@@ -18,7 +18,7 @@ Alternative ways to accomplish the desired feature.
 
 **Developer Impact**
 <!-- Describe how this affects you as a developer. -->
-* Cost: Would require more work and data storage on Riot's part to compile and retain the information I'd like.
+* Cost: Could possibly mean the removal of other similar things.
 * Efficiency: Would let me make 10x less API calls than currently necessary to accomplish the feature.
 * User emails: I get frequent emails from users asking me about this feature.
 * Etc
