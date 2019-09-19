@@ -18,7 +18,7 @@ Alternative ways to accomplish the desired feature.
 
 **Developer Impact**
 <!-- Describe how this affects you as a developer. -->
-* Cost: Requires me to run X more servers to compensate for the issue costing me on average $200 of additional spend a month.
+* Cost: Would require more work and data storage on riot's part to compile and retain the information I'd like.
 * Efficiency: Would let me make 10x less API calls than currently necessary to accomplish the feature.
 * User emails: I get frequent emails from users asking me about this feature.
 * Etc
