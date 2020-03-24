@@ -1,17 +1,17 @@
 ---
 name: Bug Report
 about: Create a report to help us improve.
-title: "[BUG]"
+title: "[BUG] "
 labels: ''
 assignees: ''
 
 ---
 
-**Describe the bug**  
+**Bug Description**  
 A clear and concise description of what the bug is.
 
-**Issue Description**  
-A clear and concise description of what the bug is.
+**Problem Description**  
+A clear and concise description of what the problem is.
 
 **Expected Result**  
 What were you expecting to happen after you performed the above steps? Include screenshots, logs, or a description.
@@ -41,7 +41,7 @@ What actually happened after you performed the above steps? Include screenshots,
 * First condition
 * Second condition
 
-**Steps to reproduce**
+**Repro Steps**
 <!-- Step by step, what do you need to do to cause the bug? Note that GitHub will automagically number each step if you prefix the line with "1. " -->
 1. Step 1
 1. Step 2
