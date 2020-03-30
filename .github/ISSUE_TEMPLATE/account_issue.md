@@ -7,6 +7,10 @@ assignees: ''
 
 ---
 
+**Account Information**
+What's your summoner name (e.g., Tuxedo) or riot id (e.g., Tuxedo#AYAYA)?
+Have you played any of Riot's games or did you just create an account for the Developer Portal?
+
 **Issue Description**  
 A clear and concise description of what the issue is.
 
