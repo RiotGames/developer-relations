@@ -7,8 +7,8 @@ Everything else can be found at the following links:
 
 - Riot Games Developer Portal: [https://developer.riotgames.com/](https://developer.riotgames.com/)
 - Riot Games DevRel Homepage: [https://www.riotgames.com/en/DevRel](https://www.riotgames.com/en/DevRel)
-- Twitter: [https://twitter.com/riotgamesapi](https://twitter.com/riotgamesapi?lang=en)
-- Discord: [https://discord.gg/riotapi](https://discord.gg/riotapi)
+- Twitter: [https://twitter.com/riotgamesdevrel](https://twitter.com/riotgamesdevrel)
+- Discord: [https://discord.gg/riotgamesdevrel](https://discord.gg/riotgamesdevrel)
 
 
 
