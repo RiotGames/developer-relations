@@ -20,7 +20,7 @@ These samples are not suited for production environments, this samples are inten
     * APP_CALLBACK_PATH=<your-callback-path>
     * RESPONSE_TYPE=code
     * SCOPE=openid
-* Make sure you have your `.env` in the root of the project: `samples/.env` not `samples/.env`
+* Make sure you have your `.env` in the root of the project: `sample_apps/rso_sample_apps/.env` env file is shared between sample apps (go, python, nodejs)
 * Add `127.0.0.1       local.exampleapp.com` to your hosts file.
     * MacOS/Linux
     * Append `127.0.0.1       local.exampleapp.com` to the file `/etc/hosts`  
@@ -45,7 +45,7 @@ APP_CALLBACK_PATH=/oauth-callback
 RESPONSE_TYPE=code
 SCOPE=openid
 ```
-# Sequence diagram 🟦➡️🟩⬅️
+<!-- # Sequence diagram 🟦➡️🟩⬅️
 TBD
 
 # Debug 🔎🐞
@@ -53,7 +53,7 @@ TBD
 TBD
 
 ## Postman 🚀
-TBD
+TBD -->
 
 # FAQs 🤨❓
 1. How do I get my RSO_CLIENT_ID?
