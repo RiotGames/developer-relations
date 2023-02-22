@@ -144,4 +144,4 @@ function json2table(json) {
     return style + html;
 
 }
-app.listen(port, () => console.log(`Example app listening on post ${port} !`));
+app.listen(port, () => console.log(`Example app listening on post ${port}!`));
