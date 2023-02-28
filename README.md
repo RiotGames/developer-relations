@@ -10,9 +10,6 @@ Everything else can be found at the following links:
 - Twitter: [https://twitter.com/riotgamesdevrel](https://twitter.com/riotgamesdevrel)
 - Discord: [https://discord.gg/riotgamesdevrel](https://discord.gg/riotgamesdevrel)
 
-
-
-#
 # Issue Reporting Guidelines
 
 The Riot Games Developer Relations team wants to address all issues in a timely manner and will inform the responsible teams of issues their products/services have. However, we cannot guarantee that issues will be resolved.

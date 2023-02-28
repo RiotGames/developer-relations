@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "python-rso-client"
+version = "0.1.0"
+description = ""
+authors = ["Teemo"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.85.0"
+uvicorn = "^0.18.3"
+requests = {extras = ["security"], version = "^2.28.1"}
+python-dotenv = "^0.21.0"
+
+[tool.poetry.dev-dependencies]
+ipdb = "^0.13.9"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
