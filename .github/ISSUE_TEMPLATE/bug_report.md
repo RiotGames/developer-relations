@@ -32,7 +32,7 @@ Describe how this affects you as a developer. Please include the frequency and s
 **Player Impact**  
 Describe how this affects League of Legends players. Please include the frequency and severity of the issue.
 
-* Frequency: Every time the user visits the site, they experiennce this issue. Once every ~100 visits this issue occurs.
+* Frequency: Every time the user visits the site, they experience this issue. Once every ~100 visits this issue occurs.
 * Severity: When this bug happens, a user is unable to use my site. I have 200 visits to my site each day, so it affects 50% of site visits.
 * Quantity: There are ~1k players that experience this issue.
 * Region: This affects players in NA and EUW.
