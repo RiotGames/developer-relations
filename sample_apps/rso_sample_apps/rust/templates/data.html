@@ -1,0 +1,59 @@
+<style>
+    .tg  {border-collapse:collapse;border-spacing:0;}
+    .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+        overflow:hidden;padding:10px 5px;word-break:normal;}
+    .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+        font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+    .tg .tg-0lax{text-align:left;vertical-align:top}
+</style>
+<h2>account data queried using RSO Access Token:</h2><p>{{account_data}}</p>
+<table class="tg">
+    <thead>
+    <tr>
+        <th class="tg-0lax">key</th>
+        <th class="tg-0lax">value</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="tg-0lax">puuid</td>
+            <td class="tg-0lax">{{account.puuid}}<br></td>
+        </tr>
+        <tr>
+            <td class="tg-0lax">game_name</td>
+            <td class="tg-0lax">{{account.game_name}}<br></td>
+        </tr>
+        <tr>
+            <td class="tg-0lax">tag_line</td>
+            <td class="tg-0lax">{{account.tag_line}}<br></td>
+        </tr>
+    </tbody>
+</table>
+<h2>champion rotation data queried using RGAPI token</h2><p>{{champion_rotation_data}}</p>
+<table class="tg">
+    <thead>
+    <tr>
+        <th class="tg-0lax">key</th>
+        <th class="tg-0lax">value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="tg-0lax">free champion ids</td>
+        {% let ids = format!("{:?}", self.champion_rotation.free_champion_ids) %}
+        <td class="tg-0lax">{{ids}}<br></td>
+    </tr>
+    <tr>
+        <td class="tg-0lax">free champion ids for new players</td>
+        {% let ids_new_players = format!("{:?}", self.champion_rotation.free_champion_ids) %}
+        <td class="tg-0lax">{{ids_new_players}}<br></td>
+    </tr>
+    <tr>
+        <td class="tg-0lax">max new player level</td>
+        {% let max_new_player_level = format!("{:?}", self.champion_rotation.max_new_player_level) %}
+        <td class="tg-0lax">{{max_new_player_level}}<br></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="https://auth.riotgames.com/logout">logout</a>

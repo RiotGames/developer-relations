@@ -1,0 +1,13 @@
+server: # server configuration
+  host: 0.0.0.0 # address to bind to
+  port: 443  # port number
+  tls:
+    cert: # tls certificate
+    key: # tls private key
+api_token: "" # riot games api token
+client_id: "" # oauth2 client id
+client_secret: "" # oauth2 client secret
+provider_url: "https://auth.riotgames.com" # riot games api url
+callback_host: "" #  callback hostname
+account_data_url: "https://americas.api.riotgames.com/riot/account/v1/accounts/me" # riot games api account data url
+champion_data_url: "https://na1.api.riotgames.com/lol/platform/v3/champion-rotations" # riot games api champion data url
