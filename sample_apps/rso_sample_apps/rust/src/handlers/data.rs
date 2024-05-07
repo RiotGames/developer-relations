@@ -64,8 +64,8 @@ impl std::fmt::Display for ChampionRotationData {
 /// # Example
 ///
 /// ```
-/// let url = "https://example.com/account";
-/// let token = "Bearer my_token";
+/// let url = "https://americas.api.riotgames.com/riot/account/v1/accounts/me";
+/// let token = "my_token";
 /// let account_data = account_data(url, token);
 /// match account_data {
 ///     Ok(data) => println!("Account data: {:?}", data),
@@ -108,7 +108,7 @@ fn account_data(url: String, token: String) -> core::result::Result<AccountData,
 /// # Example
 ///
 /// ```
-/// let url = "https://example.com/champion-rotation";
+/// let url = "https://na1.api.riotgames.com/lol/platform/v3/champion-rotations";
 /// let token = "my_token";
 /// let champion_rotation_data = champion_rotation_data(url, token);
 /// match champion_rotation_data {
@@ -120,11 +120,16 @@ fn champion_rotation_data(
     url: String,
     token: String,
 ) -> core::result::Result<ChampionRotationData, String> {
+    info!("requesting champion rotation data");
+
     match ureq::get(url.as_str())
         .set("X-Riot-Token", token.as_str())
         .call()
     {
-        Ok(res) => Ok(serde_json::from_str(res.into_string().unwrap().as_mut_str()).unwrap()),
+        Ok(res) => {
+            info!("successfully requested champion rotation data");
+            Ok(serde_json::from_str(res.into_string().unwrap().as_mut_str()).unwrap())
+        }
         Err(e) => {
             error!("error getting champion data: {e}");
             Err(e.to_string())
