@@ -31,6 +31,7 @@ struct Response {
     /// The OAuth2 expiration time in seconds.
     pub expires_in: u32,
 }
+
 /// Handle the OAuth flow.
 ///
 /// This function handles the  OAuth flow and returns the access token.
@@ -76,6 +77,7 @@ mod tests {
     use super::*;
     use crate::config;
     use httpmock::prelude::*;
+
     struct ServiceMock {
         server: MockServer,
     }

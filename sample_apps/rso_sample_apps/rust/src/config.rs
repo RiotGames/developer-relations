@@ -57,6 +57,7 @@ impl Configuration {
         };
         format!("{}{}/oauth", protocol, self.callback_host)
     }
+
     /// Returns the provide token endpoint.
     pub fn token_url(&self) -> String {
         format!("{}/token", self.provider_url)
@@ -71,6 +72,7 @@ impl Configuration {
     pub fn authorize_url(&self) -> String {
         format!("{}/authorize", self.provider_url)
     }
+
     /// Returns the  sign in URL which opens the browser authenticates, and redirects to the
     /// callback URL to complete authentication.
     pub fn sign_in_url(&self) -> String {
@@ -111,6 +113,7 @@ mod tests {
         let dir = tempdir().unwrap();
         let file_path = dir.path().join("config.yaml");
         let mut file = File::create(&file_path).unwrap();
+
         writeln!(file, "client_id: test_id").unwrap();
         writeln!(file, "client_secret: test_secret").unwrap();
         writeln!(file, "provider_url: http://test.com").unwrap();
@@ -149,7 +152,6 @@ mod tests {
         writeln!(file, "this is not a valid yaml file").unwrap();
 
         let result = parse_file(file_path.to_str().unwrap().to_string());
-
         assert!(result.is_err());
     }
 
@@ -174,6 +176,7 @@ mod tests {
             "provider_url/authorize?redirect_uri=http://localhost:8080/oauth&client_id=client_id&response_type=code&scope=openid",
         );
     }
+
     #[test]
     fn test_sign_in_url_tls() {
         let config = config::Configuration {
@@ -239,6 +242,7 @@ mod tests {
         };
         assert_eq!(config.callback_url(), "https://localhost:8080/oauth");
     }
+
     #[test]
     fn test_token_url() {
         let config = config::Configuration {
@@ -276,6 +280,7 @@ mod tests {
         };
         assert_eq!(config.authorize_url(), "provider_url/authorize");
     }
+
     #[test]
     fn server_addr_combines_host_and_port() {
         let server = Server {
@@ -311,6 +316,7 @@ mod tests {
 
         assert!(server.tls.is_none());
     }
+
     #[test]
     fn tls_struct_holds_certificate_and_key() {
         let tls = Tls {

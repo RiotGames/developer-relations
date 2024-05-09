@@ -146,6 +146,7 @@ struct Response {
     pub champion_rotation_data: String,
     pub message: String,
 }
+
 /// Handle incoming requests for account and champion rotation data.
 ///
 /// # Returns

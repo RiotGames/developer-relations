@@ -4,6 +4,7 @@ use log::{debug, info};
 mod config;
 mod handlers;
 mod service;
+
 /// Struct containing the command line arguments.
 #[derive(Parser, Debug)]
 pub struct Args {
@@ -19,6 +20,7 @@ pub struct Args {
     #[arg(short, long, default_value = "config.yml")]
     pub config: String,
 }
+
 /// The main entry point for the program.
 #[tokio::main]
 async fn main() {
@@ -27,6 +29,7 @@ async fn main() {
     info!("😀 riot_rso_sample_app started");
     debug!("parsing command line arguments");
     let args = Args::parse();
+
     debug!("parsed command line arguments: {args:?}");
     match config::parse_file(args.config) {
         // If the configuration file is successfully parsed, start the service.
