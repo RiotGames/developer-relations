@@ -28,15 +28,11 @@ struct Response {
 /// # Example
 ///
 /// ```
-/// use warp::{Filter, Reply};
 ///
-/// fn main () {
-///     let cfg = Configuration::default();
+/// let cfg = Configuration::default();
+/// let route = handle(cfg);
+/// warp::serve(route).run(([0, 0, 0, 0], 8080));
 ///
-///     let route = handle(cfg);
-///
-///     warp::serve(route).run(([0, 0, 0, 0], 8080));
-/// }
 /// ```
 pub fn handle(
     cfg: &Configuration,
