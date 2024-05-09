@@ -51,10 +51,10 @@ pub fn handle(
         .and(warp::query::<Request>())
         .map(move |req: Request| {
             info!("✍️ handling oauth request");
-            let code = format!("{}", req.clone().code);
+            let code = req.clone().code;
             let form = [
                 ("grant_type", "authorization_code"),
-                ("code", &code.as_str()),
+                ("code", code.as_str()),
                 ("redirect_uri", &cfg.callback_url()),
             ];
             let auth = BASE64_STANDARD.encode(format!("{}:{}", cfg.client_id, cfg.client_secret));

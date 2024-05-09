@@ -4,8 +4,7 @@ use log::{debug, error, info};
 use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 use warp::{http, http::StatusCode, Filter, Rejection, Reply};
-// Define the AccountData struct
-// This struct represents the account data of a user
+/// AccountData represents the account data of a user
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct AccountData {
     pub puuid: String,
@@ -15,8 +14,8 @@ struct AccountData {
     pub tag_line: String,
 }
 
-// Implement the Display trait for AccountData
-// This allows us to print the AccountData struct in a readable format
+/// Implement the Display trait for AccountData
+/// This allows us to print the AccountData struct in a readable format
 impl std::fmt::Display for AccountData {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let j = serde_json::to_string(&self).expect("error serializing json");
@@ -24,8 +23,7 @@ impl std::fmt::Display for AccountData {
     }
 }
 
-// Define the ChampionRotationData struct
-// This struct represents the champion rotation data
+// This ChampionRotationData struct represents the champion rotation data
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct ChampionRotationData {
     #[serde(alias = "freeChampionIds")]
@@ -138,7 +136,6 @@ fn champion_rotation_data(
 }
 
 /// Response struct for  the data endpoint.
-///
 /// This struct contains the account data and champion rotation data, and is serialized to JSON before being returned to the client.
 #[derive(Serialize, Deserialize, Template, Clone)]
 #[template(path = "data.html")]
@@ -177,7 +174,7 @@ pub fn handle(
                             debug!("☁️ error getting champion data: {e:?}");
                             return http::Response::builder()
                                 .status(StatusCode::INTERNAL_SERVER_ERROR)
-                                .body(String::from(e.to_string()));
+                                .body(e.to_string());
                         }
                     };
                     // Fetch champion rotation data using the provided access token. This operation may block the thread.

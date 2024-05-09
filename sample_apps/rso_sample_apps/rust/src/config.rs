@@ -3,7 +3,7 @@ use std::fs::read_to_string;
 
 /// The server TLS configuration
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-pub(crate) struct TLS {
+pub(crate) struct Tls {
     /// The TLS certificate
     pub cert: String,
     /// The TLS key
@@ -18,7 +18,7 @@ pub(crate) struct Server {
     // The port
     pub port: u16,
     /// The server TLS configuration
-    pub tls: Option<TLS>,
+    pub tls: Option<Tls>,
 }
 
 impl Server {
@@ -93,8 +93,7 @@ impl Configuration {
 ///
 /// A `Result` containing the `Configuration` object or an error message.
 pub(crate) fn parse_file(filepath: String) -> Result<Configuration, String> {
-    let contents =
-        read_to_string(&filepath).map_err(|err| format!("error reading file - {err}"))?;
+    let contents = read_to_string(filepath).map_err(|err| format!("error reading file - {err}"))?;
     serde_yaml::from_str(&contents).map_err(|err| format!("error parsing contents - {err}"))
 }
 
@@ -102,7 +101,7 @@ pub(crate) fn parse_file(filepath: String) -> Result<Configuration, String> {
 mod tests {
     use super::*;
     use crate::config;
-    use crate::config::TLS;
+    use crate::config::Tls;
     use std::fs::File;
     use std::io::Write;
     use tempfile::tempdir;
@@ -184,7 +183,7 @@ mod tests {
             server: config::Server {
                 host: "localhost".to_string(),
                 port: 8080,
-                tls: Some(TLS {
+                tls: Some(Tls {
                     cert: "cert".to_string(),
                     key: "key".to_string(),
                 }),
@@ -228,7 +227,7 @@ mod tests {
             server: config::Server {
                 host: "localhost".to_string(),
                 port: 8080,
-                tls: Some(TLS {
+                tls: Some(Tls {
                     cert: "cert".to_string(),
                     key: "key".to_string(),
                 }),
@@ -293,7 +292,7 @@ mod tests {
         let server = Server {
             host: "localhost".to_string(),
             port: 8080,
-            tls: Some(TLS {
+            tls: Some(Tls {
                 cert: "cert".to_string(),
                 key: "key".to_string(),
             }),
@@ -314,7 +313,7 @@ mod tests {
     }
     #[test]
     fn tls_struct_holds_certificate_and_key() {
-        let tls = TLS {
+        let tls = Tls {
             cert: "certificate".to_string(),
             key: "key".to_string(),
         };
