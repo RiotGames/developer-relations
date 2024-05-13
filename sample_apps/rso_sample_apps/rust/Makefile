@@ -16,4 +16,8 @@ clean:
 
 run:
 	@echo "👷🏽‍♀️running rust project..."
-	RUST_LOG=debug cargo run
+	RUST_LOG=info cargo run
+
+debug:
+	@echo "👷🏽‍♀️debugging rust project..."
+	RUST_LOG=info cargo run

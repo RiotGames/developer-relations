@@ -6,6 +6,7 @@
 1. Make sure you have your `config.yml` in the root of the project [(_example_)](config/config.yml): `sample_apps/rso_sample_apps/rust/config.yml`.
 1. You need rust 1.77.2 installed on your machine. You can install it from [here](https://www.rust-lang.org/tools/install).
 
+---
 ### Configuration
 
 ```yaml
@@ -19,11 +20,23 @@ api_token: "" # riot games api token
 client_id: "" # oauth2 client id
 client_secret: "" # oauth2 client secret
 provider_url: "https://auth.riotgames.com" # riot games oauth auth url
-callback_host: "" #  callback hostname
+callback_host: ""  # the hostname to use for the oauth2 callback
 account_data_url: "https://americas.api.riotgames.com/riot/account/v1/accounts/me" # riot games api account data url
 champion_data_url: "https://na1.api.riotgames.com/lol/platform/v3/champion-rotations" # riot games api champion data url
 ```
+#### API Token
+_Used to access most of the Riot Games API endpoints. Further documentation can be found [here](https://developer.riotgames.com/docs/portal#web-apis_api-keys)._
 
+- **api_token** Your Riot Games API Token 
+
+#### OAuth/RSO Configuration
+_Used to authenticate users with the Riot Games services requiring OAuth2/RSO authentication. Further documentation can be found [here](https://developer.riotgames.com/docs/lol#rso-integration)._
+
+- **client_id** OAuth2 client id
+- **client_secret** OAuth2 client secret
+
+
+---
 ### Makefile
 
 This Makefile contains several commands that help with building, testing, cleaning, and running the Rust project.
@@ -39,5 +52,7 @@ This Makefile contains several commands that help with building, testing, cleani
 - `make clean`: This command cleans up any build artifacts from previous builds. It's a good practice to clean up before starting a new build.
 
 - `make run`: This command runs the Rust project. It starts the application.
+
+- `make debug` : This command runs the Rust project with debug logging enabled. It starts the application.
 
 To use these commands, open a terminal in the project's root directory and type the command you want to use. For example, to build the project, type `make build`.
