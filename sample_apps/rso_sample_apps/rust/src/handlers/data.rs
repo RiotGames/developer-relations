@@ -23,19 +23,19 @@ impl std::fmt::Display for AccountData {
     }
 }
 
-// This ChampionRotationData struct represents the champion rotation data
+/// This ChampionRotationData struct represents the champion rotation data
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct ChampionRotationData {
     #[serde(alias = "freeChampionIds")]
-    pub free_champion_ids: Vec<u32>,
+    pub free_champion_ids: Vec<usize>,
     #[serde(alias = "freeChampionIdsForNewPlayers")]
-    pub free_champion_ids_for_new_players: Vec<u32>,
+    pub free_champion_ids_for_new_players: Vec<usize>,
     #[serde(alias = "maxNewPlayerLevel")]
-    pub max_new_player_level: u32,
+    pub max_new_player_level: usize,
 }
 
-// Implement the Display trait for ChampionRotationData
-// This allows us to print the ChampionRotationData struct in a readable format (JSON)
+/// Implement the Display trait for ChampionRotationData
+/// This allows us to print the ChampionRotationData struct in a readable format (JSON)
 impl std::fmt::Display for ChampionRotationData {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let j = serde_json::to_string(&self).expect("error serializing json");
@@ -72,6 +72,7 @@ impl std::fmt::Display for ChampionRotationData {
 /// ```
 fn account_data(url: String, token: String) -> core::result::Result<AccountData, String> {
     info!("requesting account data");
+
     match ureq::get(url.as_str())
         .set("Authorization", format!("Bearer {token}").as_str())
         .call()
@@ -167,8 +168,8 @@ pub fn handle(
                     debug!("☁️ requesting champion data");
 
                     let champion_data = match champion_rotation_data(
-                        cfg.clone().champion_data_url.to_string(),
-                        cfg.clone().api_token.to_string(),
+                        cfg.champion_data_url.to_string(),
+                        cfg.api_token.to_string(),
                     ) {
                         Ok(champion_data) => champion_data,
                         Err(e) => {

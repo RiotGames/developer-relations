@@ -16,7 +16,7 @@ serde = { version = "1.0.197", features = ["derive"] }
 serde_derive = "1.0.197"
 serde_json = "1.0.115"
 serde_yaml = "0.9.34"
-tokio = { version = "1.37.0", features = ["rt", "rt-multi-thread", "macros"] }
+tokio = { version = "1.37.0", features = ["full"] }
 ureq = { version = "2.9.6", features = ["json"] }
 
 warp = { version = "0.3.7", features = ["tls"] }
