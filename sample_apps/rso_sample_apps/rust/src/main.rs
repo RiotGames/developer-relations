@@ -1,7 +1,5 @@
 use clap::Parser;
 use log::{debug, info};
-use url::{*};
-
 mod config;
 mod handlers;
 mod service;
@@ -32,7 +30,7 @@ async fn main() {
 
     let args = Args::parse();
     debug!("parsed command line arguments: {args:?}");
-    match config::parse_file(args.config) {
+    match config::parse(args.config) {
         // If the configuration file is successfully parsed, start the service.
         Ok(cfg) => {
             info!("😁 starting");

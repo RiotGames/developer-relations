@@ -130,7 +130,6 @@ mod tests {
         let res = warp::test::request().path("/oauth?code=abc").reply(&filter);
 
         assert_eq!(res.await.status(), 200, "Should return 200");
-        assert_eq!(res.await.status(), 200, "Should return 200");
     }
 
     #[tokio::test]

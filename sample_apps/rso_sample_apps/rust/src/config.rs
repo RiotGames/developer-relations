@@ -1,5 +1,5 @@
+use config::{Config, Environment, File};
 use serde_derive::{Deserialize, Serialize};
-use std::fs::read_to_string;
 
 /// The server TLS configuration
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
@@ -13,8 +13,6 @@ pub(crate) struct Tls {
 /// The server configuration
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub(crate) struct Server {
-    /// The server address
-    pub addr: String,
     /// The server hostname
     pub host: String,
     // The port
@@ -87,18 +85,25 @@ impl Configuration {
     }
 }
 
-/// Parse a YAML  file into a `Configuration` object.
-///
-/// # Arguments
-///
-/// * `filepath`: The path to the YAML file.
-///
-/// # Returns
-///
-/// A `Result` containing the `Configuration` object or an error message.
-pub(crate) fn parse_file(filepath: String) -> Result<Configuration, String> {
-    let contents = read_to_string(filepath).map_err(|err| format!("error reading file - {err}"))?;
-    serde_yaml::from_str(&contents).map_err(|err| format!("error parsing contents - {err}"))
+pub(crate) fn parse(filepath: String) -> Result<Configuration, String> {
+    let cfg = match Config::builder()
+        .add_source(File::with_name(&filepath).required(false))
+        .add_source(Environment::default())
+        .build()
+    {
+        Ok(cfg) => cfg,
+        Err(e) => {
+            return Err(format!("error parsing configuration - {}", e.to_string()));
+        }
+    };
+
+    match cfg.try_deserialize() {
+        Ok(cfg) => Ok(cfg),
+        Err(e) => Err(format!(
+            "error deserializing configuration - {}",
+            e.to_string()
+        )),
+    }
 }
 
 #[cfg(test)]
@@ -111,7 +116,7 @@ mod tests {
     use tempfile::tempdir;
 
     #[test]
-    fn parse_file_returns_configuration_when_file_is_valid() {
+    fn parse_returns_configuration_when_file_is_valid() {
         let dir = tempdir().unwrap();
         let file_path = dir.path().join("config.yaml");
         let mut file = File::create(&file_path).unwrap();
@@ -127,7 +132,7 @@ mod tests {
         writeln!(file, "account_data_url: test_data_url").unwrap();
         writeln!(file, "champion_data_url: test_data_url").unwrap();
 
-        let result = parse_file(file_path.to_str().unwrap().to_string()).unwrap();
+        let result = parse(file_path.to_str().unwrap().to_string()).unwrap();
 
         assert_eq!(result.client_id, "test_id");
         assert_eq!(result.client_secret, "test_secret");
@@ -139,21 +144,21 @@ mod tests {
     }
 
     #[test]
-    fn parse_file_returns_error_when_file_does_not_exist() {
-        match parse_file("non_existent_file.yaml".to_string()) {
+    fn parse_returns_error_when_file_does_not_exist() {
+        match parse("non_existent_file.yaml".to_string()) {
             Ok(_) => {}
             Err(err) => assert_ne!(err.len(), 0),
         }
     }
 
     #[test]
-    fn parse_file_returns_error_when_file_is_invalid() {
+    fn parse_returns_error_when_file_is_invalid() {
         let dir = tempdir().unwrap();
         let file_path = dir.path().join("invalid_config.yaml");
         let mut file = File::create(&file_path).unwrap();
         writeln!(file, "this is not a valid yaml file").unwrap();
 
-        let result = parse_file(file_path.to_str().unwrap().to_string());
+        let result = parse(file_path.to_str().unwrap().to_string());
         assert!(result.is_err());
     }
 

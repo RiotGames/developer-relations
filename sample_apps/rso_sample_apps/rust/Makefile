@@ -20,4 +20,4 @@ run:
 
 debug:
 	@echo "👷🏽‍♀️debugging rust project..."
-	RUST_LOG=info cargo run
+	RUST_BACKTRACE=1 RUST_LOG=debug cargo run
