@@ -31,7 +31,6 @@ async fn main() {
     debug!("parsing command line arguments");
 
     let args = Args::parse();
-    info!("{}:{}", url::Url::parse("http://auth.riotgames.com:9090").unwrap().host().unwrap(), url::Url::parse("https://auth.riotgames.com:9090").unwrap().port().unwrap());
     debug!("parsed command line arguments: {args:?}");
     match config::parse_file(args.config) {
         // If the configuration file is successfully parsed, start the service.
