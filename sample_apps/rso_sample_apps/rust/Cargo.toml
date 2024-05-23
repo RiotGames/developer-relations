@@ -23,3 +23,4 @@ warp = { version = "0.3.7", features = ["tls"] }
 tempfile = "3.10.1"
 mockito = "1.4.0"
 httpmock = "0.7.0"
+url = "2.5.0"

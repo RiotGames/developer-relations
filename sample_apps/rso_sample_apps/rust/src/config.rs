@@ -14,6 +14,8 @@ pub(crate) struct Tls {
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub(crate) struct Server {
     /// The server address
+    pub addr: String,
+    /// The server hostname
     pub host: String,
     // The port
     pub port: u16,
