@@ -1,9 +1,10 @@
 use config::{Config, Environment, File};
 use serde_derive::{Deserialize, Serialize};
+use log::{debug};
 
 /// The server TLS configuration
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-pub(crate) struct Tls {
+pub struct Tls {
     /// The TLS certificate
     pub cert: String,
     /// The TLS key
@@ -12,7 +13,7 @@ pub(crate) struct Tls {
 
 /// The server configuration
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-pub(crate) struct Server {
+pub struct Server {
     /// The server hostname
     pub host: String,
     // The port
@@ -29,7 +30,7 @@ impl Server {
 
 /// Configuration holds the  required parameters to connect to a Git provider.
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-pub(crate) struct Configuration {
+pub struct Configuration {
     /// The  client ID.
     pub client_id: String,
     /// The client secret.
@@ -93,17 +94,19 @@ pub(crate) fn parse(filepath: String) -> Result<Configuration, String> {
     {
         Ok(cfg) => cfg,
         Err(e) => {
-            return Err(format!("error parsing configuration - {}", e.to_string()));
+            return Err(format!("error parsing configuration - {e}"));
         }
     };
 
     match cfg.try_deserialize() {
-        Ok(cfg) => Ok(cfg),
-        Err(e) => Err(format!(
-            "error deserializing configuration - {}",
-            e.to_string()
-        )),
+        Ok(cfg) => {
+            debug!("📄 parsed configuration successfully");
+            Ok(cfg)
+        },
+        Err(e) => Err(format!("error deserializing configuration - {e}")),
     }
+
+
 }
 
 #[cfg(test)]

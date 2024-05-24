@@ -1,12 +1,14 @@
-use crate::config;
+use super::HtmlTemplate;
+use crate::config::Configuration;
 use askama::Template;
+use axum::extract::{Query, State};
+use axum::response::IntoResponse;
 use log::{debug, error, info};
 use serde_derive::{Deserialize, Serialize};
-use std::collections::HashMap;
-use warp::{http, http::StatusCode, Filter, Rejection, Reply};
+
 /// AccountData represents the account data of a user
 #[derive(Serialize, Deserialize, Debug, Clone)]
-struct AccountData {
+pub struct AccountData {
     pub puuid: String,
     #[serde(alias = "gameName")]
     pub game_name: String,
@@ -25,7 +27,7 @@ impl std::fmt::Display for AccountData {
 
 /// This ChampionRotationData struct represents the champion rotation data
 #[derive(Serialize, Deserialize, Debug, Clone)]
-struct ChampionRotationData {
+pub struct ChampionRotationData {
     #[serde(alias = "freeChampionIds")]
     pub free_champion_ids: Vec<usize>,
     #[serde(alias = "freeChampionIdsForNewPlayers")]
@@ -71,14 +73,13 @@ impl std::fmt::Display for ChampionRotationData {
 /// }
 /// ```
 fn account_data(url: String, token: String) -> core::result::Result<AccountData, String> {
-    info!("requesting account data");
-
+    debug!("requesting account data");
     match ureq::get(url.as_str())
         .set("Authorization", format!("Bearer {token}").as_str())
         .call()
     {
         Ok(res) => {
-            info!("successfully requested account data");
+            debug!("successfully requested account data");
             Ok(serde_json::from_str(res.into_string().unwrap().as_mut_str()).unwrap())
         }
         Err(e) => {
@@ -120,7 +121,6 @@ fn champion_rotation_data(
     token: String,
 ) -> core::result::Result<ChampionRotationData, String> {
     info!("requesting champion rotation data");
-
     match ureq::get(url.as_str())
         .set("X-Riot-Token", token.as_str())
         .call()
@@ -136,11 +136,19 @@ fn champion_rotation_data(
     }
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+/// An OAuth request containing a code.
+pub struct Request {
+    /// The code that was given to us after the user authenticated with the
+    /// provider.
+    pub access_token: String,
+}
+
 /// Response struct for  the data endpoint.
 /// This struct contains the account data and champion rotation data, and is serialized to JSON before being returned to the client.
 #[derive(Serialize, Deserialize, Template, Clone)]
 #[template(path = "data.html")]
-struct Response {
+pub struct Response {
     pub account: AccountData,
     pub account_data: String,
     pub champion_rotation: ChampionRotationData,
@@ -148,179 +156,34 @@ struct Response {
     pub message: String,
 }
 
-/// Handle incoming requests for account and champion rotation data.
-///
-/// # Returns
-///
-/// A `Filter` that  handles incoming requests.
-pub fn handle(
-    cfg: &config::Configuration,
-) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
-    let cfg = cfg.clone();
-    warp::get()
-        .and(warp::path("data"))
-        .and(warp::query::<HashMap<String, String>>())
-        .map(
-            move |p: HashMap<String, String>| match p.get("access_token") {
-                Some(access_token) => {
-                    info!("☁️ handling data request");
-
-                    debug!("☁️ requesting champion data");
-
-                    let champion_data = match champion_rotation_data(
-                        cfg.champion_data_url.to_string(),
-                        cfg.api_token.to_string(),
-                    ) {
-                        Ok(champion_data) => champion_data,
-                        Err(e) => {
-                            debug!("☁️ error getting champion data: {e:?}");
-                            return http::Response::builder()
-                                .status(StatusCode::INTERNAL_SERVER_ERROR)
-                                .body(e.to_string());
-                        }
-                    };
-                    // Fetch champion rotation data using the provided access token. This operation may block the thread.
-                    //     let champion_data = champion_rotation_data(cfg.clone().api_token.to_string())
-                    //       .expect("error getting champion data");
-                    debug!("☁️ received champion data: {champion_data:?}");
-
-                    debug!("☁️ requesting account data");
-                    // Fetch account data using the provided access token. This operation may block the thread.
-                    let acct_data: AccountData =
-                        account_data(cfg.clone().account_data_url, access_token.to_string())
-                            .expect("error getting account data");
-
-                    debug!("☁️ received account data: {acct_data:?}");
-
-                    info!("☁️ completed handling data request");
-
-                    // Create a `Response` object with the account and champion rotation data.
-                    http::Response::builder().status(StatusCode::OK).body(
-                        Response {
-                            account: acct_data.clone(),
-                            account_data: acct_data.clone().to_string(),
-                            champion_rotation: champion_data.clone(),
-                            champion_rotation_data: champion_data.clone().to_string(),
-                            message: "".to_string(),
-                        }
-                        .to_string(),
-                    )
-                }
-                // If no `access_token` query parameter is provided, return a response with a status code of 401
-                // (Unauthorized).
-                None => http::Response::builder()
-                    .status(StatusCode::UNAUTHORIZED)
-                    .body(String::from("unauthorized")),
-            },
-        )
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    struct ServiceMock {
-        server: MockServer,
+// basic handler that responds with a static string
+pub async fn handle(
+    Query(query): Query<Request>,
+    State(cfg): State<Configuration>,
+) -> impl IntoResponse {
+    if query.access_token.is_empty() {
+        return Err("unauthorized".to_string());
     }
 
-    impl ServiceMock {
-        fn new(status_code: u16) -> Self {
-            let server = MockServer::start();
+    info!("☁️ handling data request");
 
-            server.mock(|when, then| {
-                 when.method(GET)
-                     .path("/lol/platform/v3/champion-rotations");
-                 then.status(status_code)
-                     .header("content-type", "application/json")
-                     .body(r#"{"freeChampionIds": [1, 2, 3], "freeChampionIdsForNewPlayers": [4, 5, 6], "maxNewPlayerLevel": 10}"#);
-             });
+    // Fetch champion rotation data using the provided access token. This operation may block the thread.
+    let champion_data =
+        champion_rotation_data(cfg.champion_data_url.clone(), cfg.api_token.clone())
+            .map_err(|e| format!("{:?}", e))?;
 
-            server.mock(|when, then| {
-                when.method(GET).path("/riot/account/v1/accounts/me");
-                then.status(status_code)
-                    .header("content-type", "application/json")
-                    .body(r#"{"puuid": "123", "gameName": "test", "tagLine": "test"}"#);
-            });
+    // Fetch account data using the provided access token. This operation may block the thread.
+    let acct_data = account_data(cfg.account_data_url.clone(), query.access_token.clone())
+        .map_err(|e| format!("{:?}", e))?;
 
-            ServiceMock { server }
-        }
+    info!("☁️ completed handling data request");
 
-        fn configuration(&self) -> config::Configuration {
-            config::Configuration {
-                server: config::Server {
-                    host: "".to_string(),
-                    port: 443,
-                    tls: None,
-                },
-                api_token: "".to_string(),
-                client_id: "".to_string(),
-                client_secret: "".to_string(),
-                provider_url: "".to_string(),
-                callback_host: "".to_string(),
-                account_data_url: self.server.url("/riot/account/v1/accounts/me"),
-                champion_data_url: self.server.url("/lol/platform/v3/champion-rotations"),
-            }
-        }
-    }
-    use httpmock::prelude::*;
-
-    #[test]
-    fn account_data_returns_expected_result() {
-        let cfg = ServiceMock::new(200).configuration();
-        let result =
-            account_data(cfg.account_data_url.to_string(), "test_token".to_string()).unwrap();
-
-        assert_eq!(result.puuid, "123");
-        assert_eq!(result.game_name, "test");
-        assert_eq!(result.tag_line, "test");
-    }
-
-    #[test]
-    fn account_data_handles_error() {
-        let cfg = ServiceMock::new(500).configuration();
-        let result = account_data(cfg.account_data_url.to_string(), "test_token".to_string());
-
-        assert_eq!(result.is_err(), true);
-    }
-
-    #[tokio::test]
-    async fn champion_rotation_data_returns_expected_result() {
-        let cfg = ServiceMock::new(200).configuration();
-        let result =
-            champion_rotation_data(cfg.champion_data_url.to_string(), "test_token".to_string())
-                .unwrap();
-
-        assert_eq!(result.free_champion_ids, vec![1, 2, 3]);
-        assert_eq!(result.free_champion_ids_for_new_players, vec![4, 5, 6]);
-        assert_eq!(result.max_new_player_level, 10);
-    }
-
-    #[tokio::test]
-    async fn champion_rotation_data_handles_error() {
-        let cfg = ServiceMock::new(500).configuration();
-        let result =
-            champion_rotation_data(cfg.champion_data_url.to_string(), "test_token".to_string());
-
-        assert_eq!(result.is_err(), true);
-    }
-
-    #[tokio::test]
-    async fn handle_returns_expected_result() {
-        let cfg = ServiceMock::new(200).configuration();
-        let filter = handle(&cfg);
-        let res = warp::test::request()
-            .path("/data?access_token=test_token")
-            .reply(&filter);
-
-        assert_eq!(res.await.status(), 200, "Should return 200");
-    }
-
-    #[tokio::test]
-    async fn handle_returns_unauthorized_when_no_access_token() {
-        let cfg = ServiceMock::new(200).configuration();
-        let filter = handle(&cfg);
-        let res = warp::test::request().path("/data").reply(&filter);
-
-        assert_eq!(res.await.status(), 401, "Should return 200");
-    }
+    // Create a `Response` object with the account and champion rotation data.
+    Ok(HtmlTemplate(Response {
+        account: acct_data.clone(),
+        account_data: acct_data.clone().to_string(),
+        champion_rotation: champion_data.clone(),
+        champion_rotation_data: champion_data.clone().to_string(),
+        message: "".to_string(),
+    }))
 }

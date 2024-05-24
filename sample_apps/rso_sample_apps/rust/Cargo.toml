@@ -25,3 +25,5 @@ mockito = "1.4.0"
 httpmock = "0.7.0"
 url = "2.5.0"
 config = "0.14.0"
+axum = {  version = "0.7.5"  }
+axum-server  = { version = "0.6.0", features = ["tls-rustls"] }

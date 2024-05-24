@@ -25,21 +25,18 @@ pub struct Args {
 async fn main() {
     env_logger::init();
     // Parse command line arguments.
-    info!("😀 riot_rso_sample_app started");
-    debug!("parsing command line arguments");
-
+    info!("😀 application started");
     let args = Args::parse();
-    debug!("parsed command line arguments: {args:?}");
+    debug!("😀 parsed command line arguments: {args:?}");
     match config::parse(args.config) {
         // If the configuration file is successfully parsed, start the service.
         Ok(cfg) => {
-            info!("😁 starting");
-            service::listen(&cfg);
-            info!("🥹 stopped successfully , goodbye.");
+            service::listen(&cfg).await;
         }
         // If the configuration file  is not successfully parsed, panic.
         Err(err) => {
-            panic!("error {}", err)
+            panic!("{err}")
         }
     }
+    info!("🥹riot rso example application completed successfully, goodbye.");
 }

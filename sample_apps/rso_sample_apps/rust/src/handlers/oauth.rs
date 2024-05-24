@@ -1,14 +1,18 @@
+use super::HtmlTemplate;
 use crate::config::Configuration;
 use askama_warp::Template;
+use axum::{
+    extract::{Query, State},
+    response::IntoResponse,
+};
 use base64::prelude::*;
 use log::info;
-use serde_derive::{Deserialize, Serialize};
-use warp::http::StatusCode;
-use warp::{http, Filter, Rejection, Reply};
+
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 /// An OAuth request containing a code.
-struct Request {
+pub struct Request {
     /// The code that was given to us after the user authenticated with the
     /// provider.
     pub code: String,
@@ -17,7 +21,7 @@ struct Request {
 /// The OAuth2 response returned from the authorization server.
 #[derive(Clone, Serialize, Deserialize, Debug, Template)]
 #[template(path = "oauth.html")]
-struct Response {
+pub struct Response {
     /// The OAuth2 access token.
     pub access_token: String,
     /// The  OAuth2 refresh token.
@@ -32,44 +36,27 @@ struct Response {
     pub expires_in: u32,
 }
 
-/// Handle the OAuth flow.
-///
-/// This function handles the  OAuth flow and returns the access token.
-///
-/// # Arguments
-///
-/// * `cfg` is the configuration for the OAuth flow.
-///
-/// # Returns
-///
-/// A filter that handles the OAuth flow and returns the access token.
-pub fn handle(
-    cfg: &Configuration,
-) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
-    let cfg = cfg.clone();
-    warp::get()
-        .and(warp::path("oauth"))
-        .and(warp::query::<Request>())
-        .map(move |req: Request| {
-            info!("✍️ handling oauth request");
-            let code = req.clone().code;
-            let form = [
-                ("grant_type", "authorization_code"),
-                ("code", code.as_str()),
-                ("redirect_uri", &cfg.callback_url()),
-            ];
-            let auth = BASE64_STANDARD.encode(format!("{}:{}", cfg.client_id, cfg.client_secret));
-            let body: Response = ureq::post(cfg.token_url().as_str())
-                .set("Authorization", format!("Basic {auth}").as_str())
-                .send_form(&form)
-                .expect("error sending token request")
-                .into_json()
-                .expect("error parsing oauth response");
-            info!("✍️ completed handling oauth request");
-            http::Response::builder()
-                .status(StatusCode::OK)
-                .body(body.to_string())
-        })
+pub async fn handle(
+    Query(query): Query<Request>,
+    State(cfg): State<Configuration>,
+) -> impl IntoResponse {
+    info!("✍️ handling oauth request");
+    let code = query.code;
+    let form = [
+        ("grant_type", "authorization_code"),
+        ("code", code.as_str()),
+        ("redirect_uri", &cfg.callback_url()),
+    ];
+    let auth = BASE64_STANDARD.encode(format!("{}:{}", cfg.client_id, cfg.client_secret));
+    let res: Response = ureq::post(cfg.token_url().as_str())
+        .set("Authorization", format!("Basic {auth}").as_str())
+        .send_form(&form)
+        .expect("error sending token request")
+        .into_json()
+        .expect("error parsing oauth response");
+    info!("✍️ completed handling oauth request");
+
+    HtmlTemplate(res)
 }
 
 #[cfg(test)]
