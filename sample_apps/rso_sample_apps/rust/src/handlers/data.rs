@@ -187,3 +187,18 @@ pub async fn handle(
         message: "".to_string(),
     }))
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn account_data_returns_expected_result() {}
+
+    #[test]
+    fn account_data_handles_error() {}
+
+    #[tokio::test]
+    async fn champion_rotation_data_returns_expected_result() {}
+
+    #[tokio::test]
+    async fn champion_rotation_data_handles_error() {}
+}

@@ -1,6 +1,6 @@
 use config::{Config, Environment, File};
+use log::debug;
 use serde_derive::{Deserialize, Serialize};
-use log::{debug};
 
 /// The server TLS configuration
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
@@ -102,11 +102,9 @@ pub(crate) fn parse(filepath: String) -> Result<Configuration, String> {
         Ok(cfg) => {
             debug!("📄 parsed configuration successfully");
             Ok(cfg)
-        },
+        }
         Err(e) => Err(format!("error deserializing configuration - {e}")),
     }
-
-
 }
 
 #[cfg(test)]
@@ -114,9 +112,6 @@ mod tests {
     use super::*;
     use crate::config;
     use crate::config::Tls;
-    use std::fs::File;
-    use std::io::Write;
-    use tempfile::tempdir;
 
     #[test]
     fn test_sign_in_url() {

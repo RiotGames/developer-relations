@@ -27,3 +27,5 @@ url = "2.5.0"
 config = "0.14.0"
 axum = {  version = "0.7.5"  }
 axum-server  = { version = "0.6.0", features = ["tls-rustls"] }
+tower = "0.4.13"
+http-body-util = "0.1.1"
