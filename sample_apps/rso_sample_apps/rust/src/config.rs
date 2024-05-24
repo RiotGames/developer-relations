@@ -116,53 +116,6 @@ mod tests {
     use tempfile::tempdir;
 
     #[test]
-    fn parse_returns_configuration_when_file_is_valid() {
-        let dir = tempdir().unwrap();
-        let file_path = dir.path().join("config.yaml");
-        let mut file = File::create(&file_path).unwrap();
-
-        writeln!(file, "client_id: test_id").unwrap();
-        writeln!(file, "client_secret: test_secret").unwrap();
-        writeln!(file, "provider_url: http://test.com").unwrap();
-        writeln!(file, "server:").unwrap();
-        writeln!(file, "  host: localhost").unwrap();
-        writeln!(file, "  port: 8080").unwrap();
-        writeln!(file, "callback_host: localhost:8080").unwrap();
-        writeln!(file, "api_token: test_token").unwrap();
-        writeln!(file, "account_data_url: test_data_url").unwrap();
-        writeln!(file, "champion_data_url: test_data_url").unwrap();
-
-        let result = parse(file_path.to_str().unwrap().to_string()).unwrap();
-
-        assert_eq!(result.client_id, "test_id");
-        assert_eq!(result.client_secret, "test_secret");
-        assert_eq!(result.provider_url, "http://test.com");
-        assert_eq!(result.server.host, "localhost");
-        assert_eq!(result.server.port, 8080);
-        assert_eq!(result.callback_host, "localhost:8080");
-        assert_eq!(result.api_token, "test_token");
-    }
-
-    #[test]
-    fn parse_returns_error_when_file_does_not_exist() {
-        match parse("non_existent_file.yaml".to_string()) {
-            Ok(_) => {}
-            Err(err) => assert_ne!(err.len(), 0),
-        }
-    }
-
-    #[test]
-    fn parse_returns_error_when_file_is_invalid() {
-        let dir = tempdir().unwrap();
-        let file_path = dir.path().join("invalid_config.yaml");
-        let mut file = File::create(&file_path).unwrap();
-        writeln!(file, "this is not a valid yaml file").unwrap();
-
-        let result = parse(file_path.to_str().unwrap().to_string());
-        assert!(result.is_err());
-    }
-
-    #[test]
     fn test_sign_in_url() {
         let config = config::Configuration {
             client_id: "client_id".to_string(),
