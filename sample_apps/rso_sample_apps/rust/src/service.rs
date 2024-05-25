@@ -28,7 +28,7 @@ fn create_app(cfg: &Configuration) -> Router {
 pub(crate) async fn listen(cfg: &config::Configuration) {
     match cfg.server.addr().parse::<std::net::SocketAddr>() {
         Ok(addr) => {
-            let app = create_app(&cfg);
+            let app = create_app(cfg);
 
             match cfg.clone().server.tls {
                 Some(tls) => {
@@ -59,63 +59,27 @@ pub(crate) async fn listen(cfg: &config::Configuration) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use axum::{
-        body::Body,
-        http::{Request, StatusCode},
-    };
+    use axum::body::Body;
+    use axum::http::{Request, StatusCode};
     use tower::ServiceExt;
-
-    use crate::config;
-    use httpmock::prelude::*;
-
-    struct ServiceMock {
-        server: MockServer,
-    }
-
-    impl ServiceMock {
-        fn new() -> Self {
-            let server = MockServer::start();
-
-            server.mock(|when, then| {
-                when.method(POST)
-                    .path("/token")
-                    .x_www_form_urlencoded_key_exists("code");
-                then.status(200)
-                    .header("content-type", "application/json")
-                    .body(r#"{"access_token": "xyz", "refresh_token": "abc", "scope": "def", "id_token": "ghi", "token_type": "jkl", "expires_in": 3600}"#);
-            });
-
-            server.mock(|when, then| {
-                when.method(POST).path("/token");
-                then.status(401)
-                    .header("content-type", "application/json")
-                    .body(r#"{}"#);
-            });
-
-            ServiceMock { server }
-        }
-
-        fn configuration(&self) -> config::Configuration {
-            config::Configuration {
-                server: config::Server {
-                    host: "".to_string(),
-                    port: 443,
-                    tls: None,
-                },
-                api_token: "".to_string(),
-                client_id: "".to_string(),
-                client_secret: "".to_string(),
-                provider_url: self.server.url("").to_string(),
-                callback_host: "".to_string(),
-                account_data_url: "".to_string(),
-                champion_data_url: "".to_string(),
-            }
-        }
-    }
 
     #[tokio::test]
     async fn default() {
-        let cfg = ServiceMock::new().configuration();
+        let prov = mock::AuthProvider::new();
+        let cfg = Configuration {
+            server: config::Server {
+                host: "".to_string(),
+                port: 443,
+                tls: None,
+            },
+            api_token: "".to_string(),
+            client_id: "".to_string(),
+            client_secret: "".to_string(),
+            provider_url: prov.server.url("").to_string(),
+            callback_host: "".to_string(),
+            account_data_url: "".to_string(),
+            champion_data_url: "".to_string(),
+        };
         let app = create_app(&cfg);
         let response = app
             .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
@@ -127,7 +91,21 @@ mod tests {
 
     #[tokio::test]
     async fn oauth_no_code() {
-        let cfg = ServiceMock::new().configuration();
+        let prov = mock::AuthProvider::new();
+        let cfg = Configuration {
+            server: config::Server {
+                host: "".to_string(),
+                port: 443,
+                tls: None,
+            },
+            api_token: "".to_string(),
+            client_id: "".to_string(),
+            client_secret: "".to_string(),
+            provider_url: prov.server.url("").to_string(),
+            callback_host: "".to_string(),
+            account_data_url: "".to_string(),
+            champion_data_url: "".to_string(),
+        };
         let app = create_app(&cfg);
         let response = app
             .oneshot(
@@ -144,7 +122,21 @@ mod tests {
 
     #[tokio::test]
     async fn oauth_code() {
-        let cfg = ServiceMock::new().configuration();
+        let prov = mock::AuthProvider::new();
+        let cfg = Configuration {
+            server: config::Server {
+                host: "".to_string(),
+                port: 443,
+                tls: None,
+            },
+            api_token: "".to_string(),
+            client_id: "".to_string(),
+            client_secret: "".to_string(),
+            provider_url: prov.server.url("").to_string(),
+            callback_host: "".to_string(),
+            account_data_url: "".to_string(),
+            champion_data_url: "".to_string(),
+        };
         let app = create_app(&cfg);
 
         let response = app
@@ -162,7 +154,21 @@ mod tests {
 
     #[tokio::test]
     async fn data_returns_expected_result() {
-        let cfg = ServiceMock::new().configuration();
+        let prov = mock::AuthProvider::new();
+        let cfg = Configuration {
+            server: config::Server {
+                host: "".to_string(),
+                port: 443,
+                tls: None,
+            },
+            api_token: "".to_string(),
+            client_id: "".to_string(),
+            client_secret: "".to_string(),
+            provider_url: prov.server.url("").to_string(),
+            callback_host: "".to_string(),
+            account_data_url: "".to_string(),
+            champion_data_url: "".to_string(),
+        };
         let app = create_app(&cfg);
 
         let response = app
@@ -180,7 +186,21 @@ mod tests {
 
     #[tokio::test]
     async fn data_returns_unauthorized_when_no_access_token() {
-        let cfg = ServiceMock::new().configuration();
+        let prov = mock::AuthProvider::new();
+        let cfg = Configuration {
+            server: config::Server {
+                host: "".to_string(),
+                port: 443,
+                tls: None,
+            },
+            api_token: "".to_string(),
+            client_id: "".to_string(),
+            client_secret: "".to_string(),
+            provider_url: prov.server.url("").to_string(),
+            callback_host: "".to_string(),
+            account_data_url: "".to_string(),
+            champion_data_url: "".to_string(),
+        };
         let app = create_app(&cfg);
 
         let response = app

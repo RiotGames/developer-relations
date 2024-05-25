@@ -3,6 +3,10 @@ name = "riot_rso_sample_app"
 version = "0.1.0"
 edition = "2021"
 
+[dev-dependencies]
+mock = { path = "mock" }
+
+
 [dependencies]
 askama = { version = "0.12.1", features = ["with-warp"] }
 askama_warp = "0.13.0"
