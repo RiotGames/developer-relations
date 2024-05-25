@@ -61,12 +61,11 @@ mod tests {
     use super::*;
     use axum::body::Body;
     use axum::http::{Request, StatusCode};
+    use mock::AuthProvider;
     use tower::ServiceExt;
 
-    #[tokio::test]
-    async fn default() {
-        let prov = mock::AuthProvider::new();
-        let cfg = Configuration {
+    fn configuration(auth: &AuthProvider) -> Configuration {
+        Configuration {
             server: config::Server {
                 host: "".to_string(),
                 port: 443,
@@ -75,11 +74,16 @@ mod tests {
             api_token: "".to_string(),
             client_id: "".to_string(),
             client_secret: "".to_string(),
-            provider_url: prov.server.url("").to_string(),
+            provider_url: auth.server.url("").to_string(),
             callback_host: "".to_string(),
             account_data_url: "".to_string(),
             champion_data_url: "".to_string(),
-        };
+        }
+    }
+    #[tokio::test]
+    async fn default() {
+        let prov = mock::AuthProvider::new();
+        let cfg = configuration(&prov);
         let app = create_app(&cfg);
         let response = app
             .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
@@ -92,20 +96,7 @@ mod tests {
     #[tokio::test]
     async fn oauth_no_code() {
         let prov = mock::AuthProvider::new();
-        let cfg = Configuration {
-            server: config::Server {
-                host: "".to_string(),
-                port: 443,
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            provider_url: prov.server.url("").to_string(),
-            callback_host: "".to_string(),
-            account_data_url: "".to_string(),
-            champion_data_url: "".to_string(),
-        };
+        let cfg = configuration(&prov);
         let app = create_app(&cfg);
         let response = app
             .oneshot(
@@ -123,20 +114,7 @@ mod tests {
     #[tokio::test]
     async fn oauth_code() {
         let prov = mock::AuthProvider::new();
-        let cfg = Configuration {
-            server: config::Server {
-                host: "".to_string(),
-                port: 443,
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            provider_url: prov.server.url("").to_string(),
-            callback_host: "".to_string(),
-            account_data_url: "".to_string(),
-            champion_data_url: "".to_string(),
-        };
+        let cfg = configuration(&prov);
         let app = create_app(&cfg);
 
         let response = app
@@ -155,20 +133,7 @@ mod tests {
     #[tokio::test]
     async fn data_returns_expected_result() {
         let prov = mock::AuthProvider::new();
-        let cfg = Configuration {
-            server: config::Server {
-                host: "".to_string(),
-                port: 443,
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            provider_url: prov.server.url("").to_string(),
-            callback_host: "".to_string(),
-            account_data_url: "".to_string(),
-            champion_data_url: "".to_string(),
-        };
+        let cfg = configuration(&prov);
         let app = create_app(&cfg);
 
         let response = app
@@ -187,20 +152,7 @@ mod tests {
     #[tokio::test]
     async fn data_returns_unauthorized_when_no_access_token() {
         let prov = mock::AuthProvider::new();
-        let cfg = Configuration {
-            server: config::Server {
-                host: "".to_string(),
-                port: 443,
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            provider_url: prov.server.url("").to_string(),
-            callback_host: "".to_string(),
-            account_data_url: "".to_string(),
-            champion_data_url: "".to_string(),
-        };
+        let cfg = configuration(&prov);
         let app = create_app(&cfg);
 
         let response = app
