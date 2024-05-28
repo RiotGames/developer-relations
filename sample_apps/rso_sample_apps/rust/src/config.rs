@@ -14,18 +14,10 @@ pub struct Tls {
 /// The server configuration
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Server {
-    /// The server hostname
-    pub host: String,
-    // The port
-    pub port: u16,
+    /// The server address
+    pub addr: String,
     /// The server TLS configuration
     pub tls: Option<Tls>,
-}
-
-impl Server {
-    pub fn addr(&self) -> String {
-        format!("{}:{}", self.host, self.port)
-    }
 }
 
 /// Configuration holds the  required parameters to connect to a Git provider.
@@ -120,8 +112,7 @@ mod tests {
             client_secret: "client_ secret".to_string(),
             provider_url: "provider_url".to_string(),
             server: config::Server {
-                host: "localhost".to_string(),
-                port: 8080,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             callback_host: "localhost:8080".to_string(),
@@ -142,8 +133,7 @@ mod tests {
             client_secret: "client_ secret".to_string(),
             provider_url: "provider_url".to_string(),
             server: config::Server {
-                host: "localhost".to_string(),
-                port: 8080,
+                addr: "0.0.0.0:443".to_string(),
                 tls: Some(Tls {
                     cert: "cert".to_string(),
                     key: "key".to_string(),
@@ -167,8 +157,7 @@ mod tests {
             client_secret: "client_secret".to_string(),
             provider_url: "provider_url".to_string(),
             server: config::Server {
-                host: "localhost".to_string(),
-                port: 8080,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             callback_host: "localhost:8080".to_string(),
@@ -186,8 +175,7 @@ mod tests {
             client_secret: "client_secret".to_string(),
             provider_url: "provider_url".to_string(),
             server: config::Server {
-                host: "localhost".to_string(),
-                port: 8080,
+                addr: "0.0.0.0:443".to_string(),
                 tls: Some(Tls {
                     cert: "cert".to_string(),
                     key: "key".to_string(),
@@ -208,8 +196,7 @@ mod tests {
             client_secret: "client_secret".to_string(),
             provider_url: "provider_url".to_string(),
             server: config::Server {
-                host: "localhost".to_string(),
-                port: 8080,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             callback_host: "".to_string(),
@@ -227,8 +214,7 @@ mod tests {
             client_secret: "client_secret".to_string(),
             provider_url: "provider_url".to_string(),
             server: config::Server {
-                host: "localhost".to_string(),
-                port: 8080,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             callback_host: "".to_string(),
@@ -240,21 +226,9 @@ mod tests {
     }
 
     #[test]
-    fn server_addr_combines_host_and_port() {
-        let server = Server {
-            host: "localhost".to_string(),
-            port: 8080,
-            tls: None,
-        };
-
-        assert_eq!(server.addr(), "localhost:8080");
-    }
-
-    #[test]
     fn server_with_tls() {
         let server = Server {
-            host: "localhost".to_string(),
-            port: 8080,
+            addr: "0.0.0.0:443".to_string(),
             tls: Some(Tls {
                 cert: "cert".to_string(),
                 key: "key".to_string(),
@@ -267,8 +241,7 @@ mod tests {
     #[test]
     fn server_without_tls() {
         let server = Server {
-            host: "localhost".to_string(),
-            port: 8080,
+            addr: "0.0.0.0:443".to_string(),
             tls: None,
         };
 

@@ -194,8 +194,7 @@ mod tests {
         let api = mock::ApiProvider::new();
         let cfg = Configuration {
             server: crate::config::Server {
-                host: "".to_string(),
-                port: 443,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             api_token: "".to_string(),
@@ -215,8 +214,7 @@ mod tests {
         let api = mock::ApiProvider::new();
         let cfg = Configuration {
             server: crate::config::Server {
-                host: "".to_string(),
-                port: 443,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             api_token: "".to_string(),
@@ -236,8 +234,7 @@ mod tests {
         let api = mock::ApiProvider::new();
         let cfg = Configuration {
             server: crate::config::Server {
-                host: "".to_string(),
-                port: 443,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             api_token: "".to_string(),
@@ -260,8 +257,7 @@ mod tests {
         let api = mock::ApiProvider::new();
         let cfg = Configuration {
             server: crate::config::Server {
-                host: "".to_string(),
-                port: 443,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             api_token: "".to_string(),

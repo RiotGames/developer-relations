@@ -26,10 +26,9 @@ fn create_app(cfg: &Configuration) -> Router {
 ///
 /// Panics if the host address is invalid.
 pub(crate) async fn listen(cfg: &config::Configuration) {
-    match cfg.server.addr().parse::<std::net::SocketAddr>() {
+    match cfg.server.addr.parse::<std::net::SocketAddr>() {
         Ok(addr) => {
             let app = create_app(cfg);
-
             match cfg.clone().server.tls {
                 Some(tls) => {
                     let config = RustlsConfig::from_pem_file(tls.cert, tls.key)
@@ -67,8 +66,7 @@ mod tests {
     fn configuration(auth: &AuthProvider) -> Configuration {
         Configuration {
             server: config::Server {
-                host: "".to_string(),
-                port: 443,
+                addr: "0.0.0.0:443".to_string(),
                 tls: None,
             },
             api_token: "".to_string(),

@@ -1,4 +1,5 @@
 server: # server configuration
+  addr: 0.0.0.0:443 # address to bind to
   host: 0.0.0.0 # address to bind to
   port: 443  # port number
   tls:
