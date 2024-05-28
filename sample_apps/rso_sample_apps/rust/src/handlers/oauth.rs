@@ -1,6 +1,6 @@
 use super::HtmlTemplate;
 use crate::config::Configuration;
-use askama_warp::Template;
+use askama::Template;
 use axum::{
     extract::{Query, State},
     response::IntoResponse,
