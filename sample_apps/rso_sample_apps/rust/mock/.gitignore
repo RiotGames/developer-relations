@@ -1,0 +1,16 @@
+# Compiled files
+/target
+
+# Configuration file
+/config.yml
+
+# TLS files
+*.cert
+*.key
+
+# Ignore IDE related files
+*.idea
+*.vscode
+
+# Ignore .DS_Store on macOS
+.DS_Store

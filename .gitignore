@@ -1,6 +1,6 @@
 # MacOS
 .DS_Store
-
+.idea
 # NodeJS
 node_modules
 
