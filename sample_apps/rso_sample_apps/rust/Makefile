@@ -1,6 +1,6 @@
-.PHONY: build test clean all run
+.PHONY: build test clean all run docs
 
-all: clean build test
+all: clean build test docs
 
 build:
 	@echo "👷🏽‍♀️building rust project..."
@@ -17,6 +17,13 @@ clean:
 run:
 	@echo "👷🏽‍♀️running rust project..."
 	RUST_LOG=info cargo run
+
+docs:
+	@echo "👷🏽‍♀️building project documentation..."
+	mkdir -p docs
+	rm -rf docs/*
+	cargo doc --no-deps
+	cp -r target/doc/* docs/
 
 debug:
 	@echo "👷🏽‍♀️debugging rust project..."

@@ -52,17 +52,14 @@ impl std::fmt::Display for ChampionRotationData {
 /// If the request fails, it logs the error and returns a string describing the error.
 ///
 /// # Arguments
-///
 /// * `url` - A string slice that holds the URL for the request.
 /// * `token` - A string slice that holds the Authorization token for the request.
 ///
 /// # Returns
-///
 /// This function returns a `Result` that contains an `AccountData` struct if the request is successful,
 /// or a string describing the error if the request fails.
 ///
 /// # Example
-///
 /// ```
 /// let url = "https://americas.api.riotgames.com/riot/account/v1/accounts/me";
 /// let token = "my_token";
@@ -96,17 +93,14 @@ fn account_data(url: &str, token: &str) -> core::result::Result<AccountData, Str
 /// If the request fails, it logs the error and returns a string describing the error.
 ///
 /// # Arguments
-///
 /// * `url` - A `String` that holds the URL for the request.
 /// * `token` - A `String` that holds the `X-Riot-Token` for the request.
 ///
 /// # Returns
-///
 /// This function returns a `Result` that contains a `ChampionRotationData` struct if the request is successful,
 /// or a `String` describing the error if the request fails.
 ///
 /// # Example
-///
 /// ```
 /// let url = "https://na1.api.riotgames.com/lol/platform/v3/champion-rotations";
 /// let token = "my_token";
@@ -120,10 +114,10 @@ fn champion_rotation_data(
     url: &str,
     token: &str,
 ) -> core::result::Result<ChampionRotationData, String> {
-    info!("requesting champion rotation data");
+    debug!("requesting champion rotation data");
     match ureq::get(url).set("X-Riot-Token", token).call() {
         Ok(res) => {
-            info!("successfully requested champion rotation data");
+            debug!("successfully requested champion rotation data");
             Ok(serde_json::from_str(res.into_string().unwrap().as_mut_str()).unwrap())
         }
         Err(e) => {
@@ -133,27 +127,62 @@ fn champion_rotation_data(
     }
 }
 
+/// Represents a request containing an access token.
+///
+/// This struct is used to deserialize requests where the client provides an access token
+/// obtained after authenticating with an OAuth provider. The access token is then used
+/// to authorize requests to protected resources.
 #[derive(Serialize, Deserialize, Clone, Debug)]
-/// An OAuth request containing a code.
 pub struct Request {
-    /// The code that was given to us after the user authenticated with the
-    /// provider.
+    /// The access token that was given to us after the user authenticated with the
+    /// provider. This token is used to authenticate requests made to the API.
     pub access_token: String,
 }
 
-/// Response struct for  the data endpoint.
-/// This struct contains the account data and champion rotation data, and is serialized to JSON before being returned to the client.
+/// Represents the response sent to the client for data requests.
+///
+/// This struct contains both account data and champion rotation data, serialized into JSON
+/// before being returned to the client. It is used as the response body for requests to the
+/// data endpoint, providing the client with the requested information in a structured format.
 #[derive(Serialize, Deserialize, Template, Clone)]
 #[template(path = "data.html")]
 pub struct Response {
+    /// The account data retrieved for the user.
+    /// Contains information such as the player's unique identifier, game name, and tag line.
     pub account: AccountData,
+    /// A serialized JSON string of the account data.
+    /// This is a string representation of the `account` field, provided for convenience.
     pub account_data: String,
+    /// The champion rotation data retrieved from the game server.
+    /// Contains information about the current set of champions available for free play.
     pub champion_rotation: ChampionRotationData,
+    /// A serialized JSON string of the champion rotation data.
+    /// This is a string representation of the `champion_rotation` field, provided for convenience.
     pub champion_rotation_data: String,
+    /// An optional message that can be included in the response.
+    /// This field can be used to convey additional information to the client, such as error messages or notices.
     pub message: String,
 }
 
-// basic handler that responds with a static string
+/// Handles data requests by fetching account and champion rotation data.
+///
+/// This asynchronous function acts as a handler for incoming data requests. It first checks if the provided
+/// access token is empty, returning an error if so. If the access token is present, it proceeds to fetch
+/// both account data and champion rotation data using the provided access token and configuration settings.
+/// Upon successful retrieval of both data sets, it constructs a `Response` object containing the fetched data
+/// and returns it wrapped in an `HtmlTemplate` for rendering.
+///
+/// # Arguments
+/// * `query` - Extracted query parameters from the request, containing the access token.
+/// * `cfg` - Application configuration state, containing URLs and tokens for data fetching.
+///
+/// # Returns
+/// A result wrapped in `impl IntoResponse`, which on success contains an `HtmlTemplate<Response>` with the fetched data,
+/// or an error string if the access token is missing or data fetching fails.
+///
+/// # Errors
+/// Returns an error if the access token is empty or if there is an issue fetching the account or champion rotation data.
+///
 pub async fn handle(
     Query(query): Query<Request>,
     State(cfg): State<Configuration>,
@@ -165,12 +194,12 @@ pub async fn handle(
     info!("☁️ handling data request");
 
     // Fetch champion rotation data using the provided access token. This operation may block the thread.
-    let champion_data = champion_rotation_data(&cfg.champion_data_url, &cfg.api_token)
+    let champion_data = champion_rotation_data(&cfg.api.urls.champion_data, &cfg.api.token)
         .map_err(|e| format!("{:?}", e))?;
 
     // Fetch account data using the provided access token. This operation may block the thread.
-    let acct_data =
-        account_data(&cfg.account_data_url, &query.access_token).map_err(|e| format!("{:?}", e))?;
+    let acct_data = account_data(&cfg.api.urls.account_data, &query.access_token)
+        .map_err(|e| format!("{:?}", e))?;
 
     info!("☁️ completed handling data request");
 
@@ -186,92 +215,72 @@ pub async fn handle(
 
 #[cfg(test)]
 mod tests {
-    use crate::config::Configuration;
+    use crate::config::{Api, Configuration, Rso, Tls, Urls};
     use crate::handlers::data::{account_data, champion_rotation_data};
+
+    fn create_cfg_api_url(url: String) -> Configuration {
+        Configuration {
+            server: crate::config::Server {
+                addr: "0.0.0.0:443".to_string(),
+                tls: Some(Tls {
+                    cert: "cert".to_string(),
+                    key: "key".to_string(),
+                }),
+            },
+            api: Api {
+                token: "token".to_string(),
+                urls: Urls {
+                    account_data: url.clone(),
+                    champion_data: url.clone(),
+                },
+            },
+            rso: Rso {
+                base_url: "base_url".to_string(),
+                callback_host: "local.example.com:8080".to_string(),
+                client_id: "client_id".to_string(),
+                client_secret: "client_secret".to_string(),
+            },
+        }
+    }
 
     #[test]
     fn account_data_returns_expected_result() {
         let api = mock::ApiProvider::new();
-        let cfg = Configuration {
-            server: crate::config::Server {
-                addr: "0.0.0.0:443".to_string(),
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            callback_host: "".to_string(),
-            account_data_url: api.server.url("/riot/account/v1/accounts/me").to_string(),
-            champion_data_url: "".to_string(),
-            provider_url: "".to_string(),
-        };
-        let res = account_data(&cfg.account_data_url, "token");
+        let cfg = create_cfg_api_url(api.server.url("/riot/account/v1/accounts/me").to_string());
+        let res = account_data(&cfg.api.urls.account_data, "token");
         assert_eq!(false, res.is_err());
     }
 
     #[test]
     fn account_data_handles_error() {
         let api = mock::ApiProvider::new();
-        let cfg = Configuration {
-            server: crate::config::Server {
-                addr: "0.0.0.0:443".to_string(),
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            callback_host: "".to_string(),
-            account_data_url: api.server.url("/riot/account/v1/accounts/me").to_string(),
-            champion_data_url: "".to_string(),
-            provider_url: "".to_string(),
-        };
-        let res = account_data(&cfg.account_data_url, "");
+        let cfg = create_cfg_api_url(api.server.url("/riot/account/v1/accounts/me").to_string());
+        let res = account_data(&cfg.api.urls.account_data, "");
+
         assert_eq!(true, res.is_err());
     }
 
     #[tokio::test]
     async fn champion_rotation_data_returns_expected_result() {
         let api = mock::ApiProvider::new();
-        let cfg = Configuration {
-            server: crate::config::Server {
-                addr: "0.0.0.0:443".to_string(),
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            callback_host: "".to_string(),
-            account_data_url: "".to_string(),
-            champion_data_url: api
-                .server
+        let cfg = create_cfg_api_url(
+            api.server
                 .url("/lol/platform/v3/champion-rotations")
                 .to_string(),
-            provider_url: "".to_string(),
-        };
-        let res = champion_rotation_data(&cfg.champion_data_url, "token");
+        );
+        let res = champion_rotation_data(&cfg.api.urls.champion_data, "token");
         assert_eq!(false, res.is_err());
     }
 
     #[tokio::test]
     async fn champion_rotation_data_handles_error() {
         let api = mock::ApiProvider::new();
-        let cfg = Configuration {
-            server: crate::config::Server {
-                addr: "0.0.0.0:443".to_string(),
-                tls: None,
-            },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            callback_host: "".to_string(),
-            account_data_url: "".to_string(),
-            champion_data_url: api
-                .server
+        let cfg = create_cfg_api_url(
+            api.server
                 .url("/lol/platform/v3/champion-rotations")
                 .to_string(),
-            provider_url: "".to_string(),
-        };
-        let res = champion_rotation_data(&cfg.account_data_url, "");
+        );
+        let res = champion_rotation_data(&cfg.api.urls.champion_data, "");
         assert_eq!(true, res.is_err());
     }
 }

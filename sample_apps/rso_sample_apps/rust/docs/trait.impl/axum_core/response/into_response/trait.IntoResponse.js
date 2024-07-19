@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"riot_rso_sample_app":[["impl&lt;T&gt; IntoResponse for <a class=\"struct\" href=\"riot_rso_sample_app/handlers/struct.HtmlTemplate.html\" title=\"struct riot_rso_sample_app::handlers::HtmlTemplate\">HtmlTemplate</a>&lt;T&gt;<div class=\"where\">where\n    T: Template,</div>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

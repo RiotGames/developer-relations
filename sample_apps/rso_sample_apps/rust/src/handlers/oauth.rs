@@ -10,15 +10,22 @@ use log::info;
 
 use serde::{Deserialize, Serialize};
 
+/// Represents an OAuth request containing a code.
+///
+/// This struct is used to deserialize the query parameters of an incoming OAuth request,
+/// specifically capturing the authorization code provided by the OAuth provider after
+/// user authentication.
 #[derive(Serialize, Deserialize, Clone, Debug)]
-/// An OAuth request containing a code.
 pub struct Request {
-    /// The code that was given to us after the user authenticated with the
-    /// provider.
+    /// The authorization code provided by the OAuth provider.
     pub code: String,
 }
 
-/// The OAuth2 response returned from the authorization server.
+/// Represents the OAuth2 response returned from the authorization server.
+///
+/// This struct is used to serialize the OAuth2 tokens and related information received
+/// from the authorization server into a format that can be rendered into an HTML template.
+/// It includes access and refresh tokens, scope, ID token, token type, and expiration time.
 #[derive(Clone, Serialize, Deserialize, Debug, Template)]
 #[template(path = "oauth.html")]
 pub struct Response {
@@ -36,6 +43,22 @@ pub struct Response {
     pub expires_in: u32,
 }
 
+/// Handles incoming OAuth requests by exchanging the authorization code for tokens.
+///
+/// This asynchronous function acts as an Axum handler for OAuth requests. It extracts the
+/// authorization code from the query parameters, constructs a request to the authorization
+/// server to exchange the code for an access token and other tokens, and then renders the
+/// response into an HTML template using the `HtmlTemplate` wrapper.
+///
+/// # Arguments
+/// * `Query(query)` - The extracted query parameters containing the authorization code.
+/// * `State(cfg)` - The application configuration state, containing OAuth client credentials
+///   and endpoints.
+///
+/// # Returns
+/// An implementation of `IntoResponse`, which can be converted into an HTTP response to be
+/// sent back to the client. This response includes the OAuth tokens rendered into an HTML
+/// template.
 pub async fn handle(
     Query(query): Query<Request>,
     State(cfg): State<Configuration>,
@@ -47,7 +70,7 @@ pub async fn handle(
         ("code", code.as_str()),
         ("redirect_uri", &cfg.callback_url()),
     ];
-    let auth = BASE64_STANDARD.encode(format!("{}:{}", cfg.client_id, cfg.client_secret));
+    let auth = BASE64_STANDARD.encode(format!("{}:{}", cfg.rso.client_id, cfg.rso.client_secret));
     let res: Response = ureq::post(cfg.token_url().as_str())
         .set("Authorization", format!("Basic {auth}").as_str())
         .send_form(&form)

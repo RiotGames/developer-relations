@@ -1,10 +1,20 @@
 use httpmock::prelude::*;
 
+/// Represents an authentication provider with a mock server for handling authentication requests.
 pub struct AuthProvider {
     pub server: MockServer,
 }
 
 impl AuthProvider {
+    /// Creates a new `AuthProvider` instance with predefined mock behaviors for authentication requests.
+    ///
+    /// # Returns
+    /// An `AuthProvider` instance with a running `MockServer`.
+    ///
+    /// # Examples
+    /// ```
+    /// let auth_provider = mock::AuthProvider::new();
+    /// ```
     pub fn new() -> Self {
         let server = MockServer::start();
 
@@ -28,11 +38,21 @@ impl AuthProvider {
     }
 }
 
+/// Represents an API provider with a mock server for handling API requests.
 pub struct ApiProvider {
    pub server: MockServer,
 }
 
 impl ApiProvider {
+    /// Creates a new `ApiProvider` instance with predefined mock behaviors for API requests.
+    ///
+    /// # Returns
+    /// An `ApiProvider` instance with a running `MockServer`.
+    ///
+    /// # Examples
+    /// ```
+    /// let api_provider = mock::ApiProvider::new();
+    /// ```
     pub fn new() -> Self {
         let server = MockServer::start();
 

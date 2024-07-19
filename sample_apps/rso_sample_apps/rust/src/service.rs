@@ -4,6 +4,17 @@ use axum::{routing::get, Router};
 use axum_server::tls_rustls::RustlsConfig;
 use log::{debug, info};
 
+/// Creates an instance of `Router` configured with routes and application state.
+///
+/// This function sets up the application's routes by associating URL paths with their respective handler functions.
+/// It also attaches the application configuration to the state of the router, making it accessible to the handlers.
+///
+/// # Arguments
+/// * `cfg` - A reference to the application's configuration.
+///
+/// # Returns
+///
+/// Returns an instance of `Router` configured with the application's routes and state.
 fn create_app(cfg: &Configuration) -> Router {
     Router::new()
         .route("/data", get(handlers::data::handle))
@@ -12,19 +23,18 @@ fn create_app(cfg: &Configuration) -> Router {
         .with_state(cfg.clone())
 }
 
-/// Runs the web service
+/// Starts the web service with the provided configuration.
+///
+/// This asynchronous function attempts to parse the server address from the configuration and start the server.
+/// If TLS configuration is provided, it starts a TLS server; otherwise, it starts a regular HTTP server.
+/// It logs the server's start-up and panics if the server address is invalid or if there are issues starting the server.
 ///
 /// # Arguments
-///
-/// `cfg`: The configuration to use for the service.
-///
-/// # Returns
-///
-/// None
+/// * `cfg` - A reference to the configuration to use for the service.
 ///
 /// # Panics
 ///
-/// Panics if the host address is invalid.
+/// Panics if the host address is invalid or if there are issues starting the server.
 pub(crate) async fn listen(cfg: &config::Configuration) {
     match cfg.server.addr.parse::<std::net::SocketAddr>() {
         Ok(addr) => {
@@ -58,6 +68,7 @@ pub(crate) async fn listen(cfg: &config::Configuration) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::config::{Api, Rso, Tls, Urls};
     use axum::body::Body;
     use axum::http::{Request, StatusCode};
     use mock::AuthProvider;
@@ -65,17 +76,26 @@ mod tests {
 
     fn configuration(auth: &AuthProvider) -> Configuration {
         Configuration {
-            server: config::Server {
+            server: crate::config::Server {
                 addr: "0.0.0.0:443".to_string(),
-                tls: None,
+                tls: Some(Tls {
+                    cert: "cert".to_string(),
+                    key: "key".to_string(),
+                }),
             },
-            api_token: "".to_string(),
-            client_id: "".to_string(),
-            client_secret: "".to_string(),
-            provider_url: auth.server.url("").to_string(),
-            callback_host: "".to_string(),
-            account_data_url: "".to_string(),
-            champion_data_url: "".to_string(),
+            api: Api {
+                token: "token".to_string(),
+                urls: Urls {
+                    account_data: auth.server.url("/riot/account/v1/accounts/me"),
+                    champion_data: auth.server.url("/lol/platform/v3/champion-rotations"),
+                },
+            },
+            rso: Rso {
+                base_url: auth.server.url("").to_string(),
+                callback_host: "local.example.com:8080".to_string(),
+                client_id: "client_id".to_string(),
+                client_secret: "client_secret".to_string(),
+            },
         }
     }
     #[tokio::test]

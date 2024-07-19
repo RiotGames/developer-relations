@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"riot_rso_sample_app":[["impl Template for <a class=\"struct\" href=\"riot_rso_sample_app/handlers/data/struct.Response.html\" title=\"struct riot_rso_sample_app::handlers::data::Response\">Response</a>"],["impl Template for <a class=\"struct\" href=\"riot_rso_sample_app/handlers/default/struct.Response.html\" title=\"struct riot_rso_sample_app::handlers::default::Response\">Response</a>"],["impl Template for <a class=\"struct\" href=\"riot_rso_sample_app/handlers/oauth/struct.Response.html\" title=\"struct riot_rso_sample_app::handlers::oauth::Response\">Response</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
