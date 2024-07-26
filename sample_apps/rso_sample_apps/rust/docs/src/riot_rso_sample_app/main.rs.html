@@ -101,7 +101,7 @@
         }
         <span class="comment">// If the configuration file  is not successfully parsed, panic.
         </span><span class="prelude-val">Err</span>(err) =&gt; {
-            <span class="macro">panic!</span>(<span class="string">"{err}"</span>)
+            <span class="macro">panic!</span>(<span class="string">"please check your configuration arguments, file and/or environment variables:\r\n{err}"</span>)
         }
     }
     <span class="macro">info!</span>(<span class="string">"🥹riot rso example application completed successfully, goodbye."</span>);

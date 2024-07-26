@@ -333,6 +333,9 @@
 <a href="#331" id="331">331</a>
 <a href="#332" id="332">332</a>
 <a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>config::{Config, Environment, File};
 <span class="kw">use </span>log::debug;
 <span class="kw">use </span>serde_derive::{Deserialize, Serialize};
@@ -367,6 +370,7 @@
     <span class="doccomment">/// API endpoint configurations.
     </span><span class="kw">pub </span>api: Api,
 }
+
 <span class="kw">impl </span>From&lt;config::Config&gt; <span class="kw">for </span>Configuration {
     <span class="kw">fn </span>from(cfg: config::Config) -&gt; <span class="self">Self </span>{
         Configuration {
@@ -394,6 +398,7 @@
         }
     }
 }
+
 <span class="doccomment">/// OAuth client configuration.
 </span><span class="attr">#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 </span><span class="kw">pub struct </span>Rso {
@@ -406,6 +411,7 @@
     <span class="doccomment">/// Client secret for OAuth authentication.
     </span><span class="kw">pub </span>client_secret: String,
 }
+
 <span class="doccomment">/// Configuration for API endpoints.
 </span><span class="attr">#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 </span><span class="kw">pub struct </span>Api {
