@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["parse"],"struct":["Api","Configuration","Rso","Server","Tls","Urls"]};

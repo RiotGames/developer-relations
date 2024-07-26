@@ -20,10 +20,8 @@ run:
 
 docs:
 	@echo "👷🏽‍♀️building project documentation..."
-	mkdir -p docs
-	rm -rf docs/*
 	cargo doc --no-deps
-	cp -r target/doc/* docs/
+	open target/doc/riot_rso_sample_app/index.html
 
 debug:
 	@echo "👷🏽‍♀️debugging rust project..."
