@@ -32,6 +32,7 @@ pub struct Configuration {
     /// API endpoint configurations.
     pub api: Api,
 }
+
 impl From<config::Config> for Configuration {
     fn from(cfg: config::Config) -> Self {
         Configuration {
@@ -59,6 +60,7 @@ impl From<config::Config> for Configuration {
         }
     }
 }
+
 /// OAuth client configuration.
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Rso {
@@ -71,6 +73,7 @@ pub struct Rso {
     /// Client secret for OAuth authentication.
     pub client_secret: String,
 }
+
 /// Configuration for API endpoints.
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct Api {

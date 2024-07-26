@@ -46,7 +46,7 @@ async fn main() {
         }
         // If the configuration file  is not successfully parsed, panic.
         Err(err) => {
-            panic!("{err}")
+            panic!("please check your configuration arguments, file and/or environment variables:\r\n{err}")
         }
     }
     info!("🥹riot rso example application completed successfully, goodbye.");

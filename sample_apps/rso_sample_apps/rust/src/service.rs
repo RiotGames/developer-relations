@@ -98,6 +98,7 @@ mod tests {
             },
         }
     }
+
     #[tokio::test]
     async fn default() {
         let prov = mock::AuthProvider::new();
