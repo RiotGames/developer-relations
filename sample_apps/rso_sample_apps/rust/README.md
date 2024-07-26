@@ -10,31 +10,36 @@
 ### Configuration
 
 ```yaml
-server: # server configuration
-  host: 0.0.0.0 # address to bind to
-  port: 443  # port number
+server: # server configuration ,
+  addr: 0.0.0.0:443 # SERVER_ADDRESS - address to bind to
   tls:
-    cert: # tls certificate
-    key: # tls private key
-api_token: "" # riot games api token
-client_id: "" # oauth2 client id
-client_secret: "" # oauth2 client secret
-provider_url: "https://auth.riotgames.com" # riot games oauth auth url
-callback_host: ""  # the hostname to use for the oauth2 callback
-account_data_url: "https://americas.api.riotgames.com/riot/account/v1/accounts/me" # riot games api account data url
-champion_data_url: "https://na1.api.riotgames.com/lol/platform/v3/champion-rotations" # riot games api champion data url
+    cert: # SERVER_TLS_CERT - tls certificate
+    key: # SERVER_TLS_KEY - tls private key
+
+rso:
+  base_url: "https://auth.riotgames.com" # RSO_BASE_URL - Riot Games oauth auth provider URL
+  callback_host: "https://local.example.com" # RSO_CALLBACK_HOST - callback hostname
+  client_id: "" # RSO_CLIENT_ID - oauth2 client id
+  client_secret: "" # RSO_CLIENT_SECRET - oauth2 client secret
+
+api:
+  token: "" # Riot Games API token - RGAPI_TOKEN
+  urls:
+    account_data: "https://americas.api.riotgames.com/riot/account/v1/accounts/me" # RGAPI_URL_ACCOUNT_DATA - Riot Games API account data URL
+    champion_data: "https://na1.api.riotgames.com/lol/platform/v3/champion-rotations" # RGAPI_URL_CHAMPION_DATA - Riot Games API champion data URL
 ```
 #### API Token
-_Used to access most of the Riot Games API endpoints. Further documentation can be found [here](https://developer.riotgames.com/docs/portal#web-apis_api-keys)._
-
-- **api_token** Your Riot Games API Token 
+_Used to access most of the Riot Games API endpoints. [More Information](https://developer.riotgames.com/docs/portal#web-apis_api-keys)_ 
+ 
+- **api:**
+  - **token:** Your Riot Games API Token 
 
 #### OAuth/RSO Configuration
-_Used to authenticate users with the Riot Games services requiring OAuth2/RSO authentication. Further documentation can be found [here](https://developer.riotgames.com/docs/lol#rso-integration)._
+_Used to authenticate users with the Riot Games services requiring OAuth2/RSO authentication. [More Information](https://developer.riotgames.com/docs/lol#rso-integration)._
 
-- **client_id** OAuth2 client id
-- **client_secret** OAuth2 client secret
-
+- **rso:**
+  - **client_id:** OAuth2 client id
+  - **client_secret:** OAuth2 client secret
 
 ---
 ### Makefile

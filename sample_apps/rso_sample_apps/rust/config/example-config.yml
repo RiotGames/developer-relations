@@ -6,7 +6,7 @@ server: # server configuration ,
 
 rso:
   base_url: "https://auth.riotgames.com" # RSO_BASE_URL - Riot Games oauth auth provider URL
-  callback_host: "" # RSO_CALLBACK_HOST - callback hostname
+  callback_host: "https://local.example.com" # RSO_CALLBACK_HOST - callback hostname
   client_id: "" # RSO_CLIENT_ID - oauth2 client id
   client_secret: "" # RSO_CLIENT_SECRET - oauth2 client secret
 
