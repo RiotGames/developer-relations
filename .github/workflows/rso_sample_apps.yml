@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: rso_sample_apps_rust
-        run: cd sample_apps/rust
+        run: cd sample_apps/rso_sample_Apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: rso_sample_apps_rust
-        run: cd sample_apps/rust
+        run: cd sample_apps/rso_sample_Apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: rso_sample_apps_rust
-        run: cd sample_apps/rust
+        run: cd sample_apps/rso_sample_Apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -57,13 +57,13 @@ jobs:
           args: --all -- --check
 
   clippy:
-    name: clipp
+    name: clippy
     runs-on: ubuntu-latest
     container: rust:latest
     steps:
       - uses: actions/checkout@v2
       - name: rso_sample_apps_rust
-        run: cd sample_apps/rust
+        run: cd sample_apps/rso_sample_Apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
