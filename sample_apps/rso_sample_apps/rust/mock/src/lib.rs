@@ -40,7 +40,7 @@ impl AuthProvider {
 
 /// Represents an API provider with a mock server for handling API requests.
 pub struct ApiProvider {
-   pub server: MockServer,
+    pub server: MockServer,
 }
 
 impl ApiProvider {
