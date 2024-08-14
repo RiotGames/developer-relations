@@ -1,6 +1,6 @@
-.PHONY: build test clean all run docs
+.PHONY: build test clean all run docs fmt
 
-all: clean build test docs
+all: clean fmt build test docs
 
 build:
 	@echo "👷🏽‍♀️building rust project..."
@@ -17,6 +17,10 @@ clean:
 run:
 	@echo "👷🏽‍♀️running rust project..."
 	RUST_LOG=info cargo run
+
+fmt:
+	@echo "👷🏽‍♀️formatting the rust project..."
+	cargo fmt --all
 
 docs:
 	@echo "👷🏽‍♀️building project documentation..."
