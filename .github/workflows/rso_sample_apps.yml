@@ -30,7 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-        components: rustfmt
+        with:
+          components: rustfmt
       - run: cargo fmt --all -- --check
         working-directory: ./sample_apps/rso_sample_apps/rust
 
@@ -41,6 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-        components: clippy
+        with:
+          components: clippy
       - run: cargo clippy -- -D warnings
         working-directory: ./sample_apps/rso_sample_apps/rust
