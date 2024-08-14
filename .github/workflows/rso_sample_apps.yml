@@ -9,11 +9,7 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
       - run: cargo check
         working-directory: ./sample_apps/rso_sample_apps/rust
 
@@ -23,11 +19,7 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
       - run: cargo test
         working-directory: ./sample_apps/rso_sample_apps/rust
 
@@ -37,12 +29,8 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - run: rustup component add rustfmt
+      - uses: dtolnay/rust-toolchain@stable
+        components: rustfmt
       - run: cargo fmt --all -- --check
         working-directory: ./sample_apps/rso_sample_apps/rust
 
@@ -52,11 +40,7 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - run: rustup component add clippy
+      - uses: dtolnay/rust-toolchain@stable
+        components: clippy
       - run: cargo clippy -- -D warnings
         working-directory: ./sample_apps/rso_sample_apps/rust
