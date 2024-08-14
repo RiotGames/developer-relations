@@ -14,10 +14,8 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: actions-rs/cargo@v1
+      - run: cargo check
         working-directory: ./sample_apps/rso_sample_apps/rust
-        with:
-          command: check
 
   test:
     name: test
@@ -30,10 +28,8 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: actions-rs/cargo@v1
+      - run: cargo test
         working-directory: ./sample_apps/rso_sample_apps/rust
-        with:
-          command: test
 
   fmt:
     name: fmt
@@ -47,11 +43,8 @@ jobs:
           toolchain: stable
           override: true
       - run: rustup component add rustfmt
-      - uses: actions-rs/cargo@v1
+      - run: cargo fmt --all -- --check
         working-directory: ./sample_apps/rso_sample_apps/rust
-        with:
-          command: fmt
-          args: --all -- --check
 
   clippy:
     name: clippy
@@ -65,8 +58,5 @@ jobs:
           toolchain: stable
           override: true
       - run: rustup component add clippy
-      - uses: actions-rs/cargo@v1
+      - run: cargo clippy -- -D warnings
         working-directory: ./sample_apps/rso_sample_apps/rust
-        with:
-          command: clippy
-          args: -- -D warnings
