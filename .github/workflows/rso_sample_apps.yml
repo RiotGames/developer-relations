@@ -9,14 +9,13 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v2
-      - name: rso_sample_apps_rust
-        run: cd sample_apps/rso_sample_apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           override: true
       - uses: actions-rs/cargo@v1
+        working-directory: ./sample_apps/rso_sample_apps/rust
         with:
           command: check
 
@@ -26,14 +25,13 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v2
-      - name: rso_sample_apps_rust
-        run: cd sample_apps/rso_sample_apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           override: true
       - uses: actions-rs/cargo@v1
+        working-directory: ./sample_apps/rso_sample_apps/rust
         with:
           command: test
 
@@ -43,8 +41,6 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v2
-      - name: rso_sample_apps_rust
-        run: cd sample_apps/rso_sample_apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -52,6 +48,7 @@ jobs:
           override: true
       - run: rustup component add rustfmt
       - uses: actions-rs/cargo@v1
+        working-directory: ./sample_apps/rso_sample_apps/rust
         with:
           command: fmt
           args: --all -- --check
@@ -62,8 +59,6 @@ jobs:
     container: rust:latest
     steps:
       - uses: actions/checkout@v2
-      - name: rso_sample_apps_rust
-        run: cd sample_apps/rso_sample_apps/rust
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -71,6 +66,7 @@ jobs:
           override: true
       - run: rustup component add clippy
       - uses: actions-rs/cargo@v1
+        working-directory: ./sample_apps/rso_sample_apps/rust
         with:
           command: clippy
           args: -- -D warnings
